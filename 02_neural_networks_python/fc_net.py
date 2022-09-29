@@ -43,10 +43,10 @@ class TwoLayerNet(object):
         self.reg = reg
 
         self.params['W1'] = np.random.normal(scale=weight_scale, size=(input_dim, hidden_dim1))
-        self.params['W2'] = np.random.normal(scale=weight_scale, size=(hidden_dim1, hidden_dim2))
+        self.params['W2'] = np.random.normal(scale=weight_scale, size=(hidden_dim1, num_classes))
         #self.params['W3'] = np.random.normal(scale=weight_scale, size=(hidden_dim2, num_classes))
         self.params['b1'] = np.zeros((hidden_dim1,))
-        self.params['b2'] = np.zeros((hidden_dim2,))
+        self.params['b2'] = np.zeros((num_classes,))
         #self.params['b3'] = np.zeros((num_classes,))
 
     def loss(self, X, y=None):
