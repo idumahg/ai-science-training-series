@@ -87,7 +87,9 @@ class TwoLayerNet(object):
         # total loss is softmax loss plus regularization term. Can change balance between the two by
         # changing self.reg
         # the 0.5 term is sometimes included in order for convenience to cancel out a 2 in the gradient
-        loss = loss_softmax + self.reg * 0.5 * regularization
+        #loss = loss_softmax + self.reg * 0.5 * regularization
+        loss = loss_softmax
+
 
         # backward pass (computing gradients)
         dx_affine_backward, grads['W3'], grads['b3'] = affine_backward(dx_softmax, cache_layer3)
