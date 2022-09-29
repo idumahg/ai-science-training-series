@@ -22,7 +22,8 @@ class TwoLayerNet(object):
     def __init__(
         self,
         input_dim=3 * 32 * 32,
-        hidden_dim=100,
+        hidden_dim1=128,
+        hidden_dim2 =64,
         num_classes=10,
         weight_scale=1e-3,
         reg=0.0,
@@ -41,10 +42,12 @@ class TwoLayerNet(object):
         self.params = {}
         self.reg = reg
 
-        self.params['W1'] = np.random.normal(scale=weight_scale, size=(input_dim, hidden_dim))
-        self.params['W2'] = np.random.normal(scale=weight_scale, size=(hidden_dim, num_classes))
-        self.params['b1'] = np.zeros((hidden_dim,))
-        self.params['b2'] = np.zeros((num_classes,))
+        self.params['W1'] = np.random.normal(scale=weight_scale, size=(input_dim, hidden_dim1))
+        self.params['W2'] = np.random.normal(scale=weight_scale, size=(hidden_dim1, hidden_dim2)
+        self.params['W3'] = np.random.normal(scale=weight_scale, size=(hidden_dim2, num_classes))
+        self.params['b1'] = np.zeros((hidden_dim1,))
+        self.params['b2'] = np.zeros((hidden_dim2,))
+        self.params['b3'] = np.zeros((num_classes,))
 
     def loss(self, X, y=None):
         """
@@ -68,7 +71,8 @@ class TwoLayerNet(object):
 
         # forward pass, keeping intermediate values to avoid recomputing
         out_layer1, cache_layer1 = affine_relu_forward(X, self.params["W1"], self.params["b1"])
-        scores, cache_layer2 = affine_forward(out_layer1, self.params["W2"], self.params["b2"])
+        out_layer2, cache_layer2 = affine_relu_forward(X, self.params["W2"], self.params["b2"])
+        scores, cache_layer3 = affine_forward(out_layer2, self.params["W3"], self.params["b3"])
 
         # If y is None then we are in test mode so just return scores
         if y is None:
@@ -77,7 +81,7 @@ class TwoLayerNet(object):
         loss, grads = 0, {}
 
         # L2 regularization is L2 norm of the weights (sum of squares)
-        regularization = np.sum(np.square(self.params["W1"])) + np.sum(np.square(self.params["W2"])) 
+        regularization = np.sum(np.square(self.params["W1"])) + np.sum(np.square(self.params["W2"])) + np.sum(np.square(self.params["W3"])) 
         loss_softmax, dx_softmax = softmax_loss(scores, y) 
 
         # total loss is softmax loss plus regularization term. Can change balance between the two by
@@ -86,10 +90,12 @@ class TwoLayerNet(object):
         loss = loss_softmax + self.reg * 0.5 * regularization
 
         # backward pass (computing gradients)
-        dx_affine_backward, grads['W2'], grads['b2'] = affine_backward(dx_softmax, cache_layer2)
-        dx, grads['W1'], grads['b1'] = affine_relu_backward(dx_affine_backward, cache_layer1) 
+        dx_affine_backward, grads['W3'], grads['b3'] = affine_backward(dx_softmax, cache_layer3)
+        dx2, grads['W2'], grads['b2'] = affine_relu_backward(dx_affine_backward, cache_layer2)
+        dx1, grads['W1'], grads['b1'] = affine_relu_backward(dx2, cache_layer1)
 
         # adjusting W1 and W2 gradients to incorporate the L2 regularization
+        grads['W3'] += self.reg * self.params['W3']
         grads['W2'] += self.reg * self.params['W2']
         grads['W1'] += self.reg * self.params['W1']
 
