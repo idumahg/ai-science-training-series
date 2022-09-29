@@ -71,7 +71,7 @@ class TwoLayerNet(object):
 
         # forward pass, keeping intermediate values to avoid recomputing
         out_layer1, cache_layer1 = affine_relu_forward(X, self.params["W1"], self.params["b1"])
-        out_layer2, cache_layer2 = affine_relu_forward(X, self.params["W2"], self.params["b2"])
+        out_layer2, cache_layer2 = affine_relu_forward(out_layer1, self.params["W2"], self.params["b2"])
         scores, cache_layer3 = affine_forward(out_layer2, self.params["W3"], self.params["b3"])
 
         # If y is None then we are in test mode so just return scores
