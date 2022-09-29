@@ -100,5 +100,8 @@ class TwoLayerNet(object):
         grads['W3'] += self.reg * self.params['W3']
         grads['W2'] += self.reg * self.params['W2']
         grads['W1'] += self.reg * self.params['W1']
+        grads['b1'] += self.reg * self.params['b1']
+        grads['b2'] += self.reg * self.params['b2']
+        grads['b3'] += self.reg * self.params['b3']
 
         return loss, grads
