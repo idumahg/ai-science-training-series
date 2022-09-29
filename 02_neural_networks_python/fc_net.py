@@ -97,11 +97,11 @@ class TwoLayerNet(object):
         dx1, grads['W1'], grads['b1'] = affine_relu_backward(dx2, cache_layer1)
 
         # adjusting W1 and W2 gradients to incorporate the L2 regularization
-        grads['W3'] += self.reg * self.params['W3']
-        grads['W2'] += self.reg * self.params['W2']
-        grads['W1'] += self.reg * self.params['W1']
-        grads['b1'] += self.reg * self.params['b1']
-        grads['b2'] += self.reg * self.params['b2']
-        grads['b3'] += self.reg * self.params['b3']
+        grads['W3'] += self.params['W3']
+        grads['W2'] += self.params['W2']
+        grads['W1'] += self.params['W1']
+        grads['b1'] += self.params['b1']
+        grads['b2'] += self.params['b2']
+        grads['b3'] += self.params['b3']
 
         return loss, grads
