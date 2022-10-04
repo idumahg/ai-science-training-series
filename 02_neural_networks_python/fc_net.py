@@ -45,9 +45,9 @@ class TwoLayerNet(object):
         self.params['W1'] = np.random.normal(scale=weight_scale, size=(input_dim, hidden_dim1))
         self.params['W2'] = np.random.normal(scale=weight_scale, size=(hidden_dim1, hidden_dim2))
         self.params['W3'] = np.random.normal(scale=weight_scale, size=(hidden_dim2, num_classes))
-        self.params['b1'] = np.random.normal((hidden_dim1,))
-        self.params['b2'] = np.random.normal((hidden_dim2,))
-        self.params['b3'] = np.random.normal((num_classes,))
+        self.params['b1'] = np.zeros((hidden_dim1,))
+        self.params['b2'] = np.zeros((hidden_dim2,))
+        self.params['b3'] = np.zeros((num_classes,))
 
     def loss(self, X, y=None):
         """
@@ -97,11 +97,8 @@ class TwoLayerNet(object):
         dx1, grads['W1'], grads['b1'] = affine_relu_backward(dx2, cache_layer1)
 
         # adjusting W1 and W2 gradients to incorporate the L2 regularization
-        grads['W3'] += self.params['W3']
-        grads['W2'] += self.params['W2']
-        grads['W1'] += self.params['W1']
-        grads['b1'] += self.params['b1']
-        grads['b2'] += self.params['b2']
-        grads['b3'] += self.params['b3']
+        grads['W3'] += self.reg * self.params['W3']
+        grads['W2'] += self.reg * self.params['W2']
+        grads['W1'] += self.reg * self.params['W1']
 
         return loss, grads
